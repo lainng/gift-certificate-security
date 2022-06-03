@@ -1,4 +1,4 @@
-<h2 align="center"> 🎓 MJC school : EPAM Systems<br/>Module #4. Authentication & Spring Security</h2>
+<h2 align="center">MJC school : EPAM Systems<br/>Module #4. Authentication & Spring Security</h2>
 
 <h3>Materials</h3>
 <ol dir="auto">
