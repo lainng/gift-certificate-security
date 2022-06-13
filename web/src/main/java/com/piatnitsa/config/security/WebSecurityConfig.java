@@ -12,6 +12,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -19,10 +21,16 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final JWTFilter jwtFilter;
     private static final String ADMIN_ROLE = "ADMIN";
+    private final AuthenticationEntryPoint unauthenticatedEntryPoint;
+    private final AccessDeniedHandler accessDeniedHandler;
 
     @Autowired
-    public WebSecurityConfig(JWTFilter jwtFilter) {
+    public WebSecurityConfig(JWTFilter jwtFilter,
+                             AuthenticationEntryPoint unauthenticatedEntryPoint,
+                             AccessDeniedHandler accessDeniedHandler) {
         this.jwtFilter = jwtFilter;
+        this.unauthenticatedEntryPoint = unauthenticatedEntryPoint;
+        this.accessDeniedHandler = accessDeniedHandler;
     }
 
     @Bean
@@ -45,6 +53,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/tags/**", "/users/**").fullyAuthenticated()
                 //Admin
                 .anyRequest().hasRole(ADMIN_ROLE)
+                .and()
+                .exceptionHandling()
+                .authenticationEntryPoint(unauthenticatedEntryPoint)
+                .accessDeniedHandler(accessDeniedHandler)
                 .and()
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
