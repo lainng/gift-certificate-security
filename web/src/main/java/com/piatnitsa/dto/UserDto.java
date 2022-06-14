@@ -1,5 +1,6 @@
 package com.piatnitsa.dto;
 
+import com.piatnitsa.entity.Role;
 import org.springframework.hateoas.CollectionModel;
 
 import java.util.Objects;
@@ -11,7 +12,9 @@ import java.util.Objects;
  */
 public class UserDto extends CollectionModel<UserDto> {
     private long id;
+    private String email;
     private String name;
+    private Role role;
 
     public long getId() {
         return id;
@@ -29,26 +32,46 @@ public class UserDto extends CollectionModel<UserDto> {
         this.name = name;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         UserDto dto = (UserDto) o;
-        return id == dto.id && Objects.equals(name, dto.name);
+        return id == dto.id && Objects.equals(email, dto.email)
+                && Objects.equals(name, dto.name)
+                && role == dto.role;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), id, name);
+        return Objects.hash(super.hashCode(), id, email, name, role);
     }
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder("User{");
-        builder.append("id=").append(id)
-                .append(", name='").append(name)
-                .append('}');
-        return builder.toString();
+        final StringBuilder sb = new StringBuilder("UserDto{");
+        sb.append("id=").append(id);
+        sb.append(", email='").append(email).append('\'');
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", role=").append(role);
+        sb.append('}');
+        return sb.toString();
     }
 }
