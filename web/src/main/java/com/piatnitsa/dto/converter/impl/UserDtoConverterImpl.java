@@ -13,6 +13,8 @@ public class UserDtoConverterImpl implements DtoConverter<UserDto, User> {
         User entity = new User();
         entity.setId(dto.getId());
         entity.setName(entity.getName());
+        entity.setEmail(dto.getEmail());
+        entity.setRole(dto.getRole());
         return entity;
     }
 
@@ -21,6 +23,8 @@ public class UserDtoConverterImpl implements DtoConverter<UserDto, User> {
         UserDto dto = new UserDto();
         dto.setId(entity.getId());
         dto.setName(entity.getName());
+        dto.setRole(entity.getRole());
+        dto.setEmail(entity.getEmail());
         return dto;
     }
 }
