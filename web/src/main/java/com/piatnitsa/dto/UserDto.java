@@ -1,5 +1,6 @@
 package com.piatnitsa.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.piatnitsa.entity.Role;
 import org.springframework.hateoas.CollectionModel;
 
@@ -14,6 +15,9 @@ public class UserDto extends CollectionModel<UserDto> {
     private long id;
     private String email;
     private String name;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String password;
     private Role role;
 
     public long getId() {
@@ -40,6 +44,14 @@ public class UserDto extends CollectionModel<UserDto> {
         this.email = email;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public Role getRole() {
         return role;
     }
@@ -56,12 +68,13 @@ public class UserDto extends CollectionModel<UserDto> {
         UserDto dto = (UserDto) o;
         return id == dto.id && Objects.equals(email, dto.email)
                 && Objects.equals(name, dto.name)
+                && Objects.equals(password, dto.password)
                 && role == dto.role;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), id, email, name, role);
+        return Objects.hash(super.hashCode(), id, email, name, password, role);
     }
 
     @Override
@@ -70,6 +83,7 @@ public class UserDto extends CollectionModel<UserDto> {
         sb.append("id=").append(id);
         sb.append(", email='").append(email).append('\'');
         sb.append(", name='").append(name).append('\'');
+        sb.append(", password='").append(password).append('\'');
         sb.append(", role=").append(role);
         sb.append('}');
         return sb.toString();
