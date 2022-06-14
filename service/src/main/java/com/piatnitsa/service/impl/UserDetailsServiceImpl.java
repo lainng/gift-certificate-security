@@ -21,7 +21,7 @@ import java.util.Optional;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-
+    private static final String ROLE_PREFIX = "ROLE_";
     private final UserRepository userRepository;
 
     @Autowired
@@ -43,7 +43,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         User user = optionalUser.get();
         List<GrantedAuthority> userAuthorities = Collections.singletonList(
-                new SimpleGrantedAuthority(user.getRole().toString())
+                new SimpleGrantedAuthority(ROLE_PREFIX + user.getRole().toString())
         );
 
         return new org.springframework.security.core.userdetails.User(
