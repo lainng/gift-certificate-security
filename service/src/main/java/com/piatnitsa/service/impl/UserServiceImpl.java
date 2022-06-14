@@ -4,8 +4,11 @@ import com.piatnitsa.dao.CRDDao;
 import com.piatnitsa.dao.UserRepository;
 import com.piatnitsa.entity.Role;
 import com.piatnitsa.entity.User;
+import com.piatnitsa.exception.ExceptionMessageHolder;
+import com.piatnitsa.exception.IncorrectParameterException;
 import com.piatnitsa.service.AbstractService;
 import com.piatnitsa.service.UserService;
+import com.piatnitsa.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,6 +30,10 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
 
     @Override
     public User insert(User entity) {
+        ExceptionMessageHolder holder = UserValidator.validate(entity);
+        if (holder.hasMessages()) {
+            throw new IncorrectParameterException(holder);
+        }
         entity.setPassword(passwordEncoder.encode(entity.getPassword()));
         entity.setRole(Role.USER);
         return userRepository.save(entity);
