@@ -1,6 +1,6 @@
 package com.piatnitsa.util.updater.impl;
 
-import com.piatnitsa.dao.TagDao;
+import com.piatnitsa.dao.TagRepository;
 import com.piatnitsa.entity.Tag;
 import com.piatnitsa.util.updater.DataUpdater;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +12,11 @@ import java.util.Optional;
 
 @Component
 public class TagDataUpdaterImpl implements DataUpdater<Tag> {
-    private final TagDao tagDao;
+    private final TagRepository tagRepository;
 
     @Autowired
-    public TagDataUpdaterImpl(TagDao tagDao) {
-        this.tagDao = tagDao;
+    public TagDataUpdaterImpl(TagRepository tagRepository) {
+        this.tagRepository = tagRepository;
     }
 
     @Override
@@ -31,7 +31,7 @@ public class TagDataUpdaterImpl implements DataUpdater<Tag> {
         }
         List<Tag> updatableList = new ArrayList<>(dataList.size());
         for (Tag tag : dataList) {
-            Optional<Tag> tagFromDb = tagDao.findByName(tag.getName());
+            Optional<Tag> tagFromDb = tagRepository.findTagByName(tag.getName());
             if (tagFromDb.isPresent()) {
                 updatableList.add(tagFromDb.get());
             } else {

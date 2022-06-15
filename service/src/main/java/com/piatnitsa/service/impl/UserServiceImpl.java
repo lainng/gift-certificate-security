@@ -1,6 +1,5 @@
 package com.piatnitsa.service.impl;
 
-import com.piatnitsa.dao.CRDDao;
 import com.piatnitsa.dao.UserRepository;
 import com.piatnitsa.entity.Role;
 import com.piatnitsa.entity.User;
@@ -22,8 +21,8 @@ public class UserServiceImpl extends AbstractService<User> implements UserServic
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(CRDDao<User> dao, UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        super(dao);
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        super(userRepository);
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
