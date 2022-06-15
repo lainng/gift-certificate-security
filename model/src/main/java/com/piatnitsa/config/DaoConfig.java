@@ -2,6 +2,7 @@ package com.piatnitsa.config;
 
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 /**
  * This class contains Spring configuration for DAO module.
@@ -10,7 +11,8 @@ import org.springframework.context.annotation.Configuration;
  * @version 1.0
  */
 @Configuration
-@EntityScan(basePackages = "com.piatnitsa")
+@EnableJpaRepositories(basePackages = "com.piatnitsa.dao")
+@EntityScan(basePackages = "com.piatnitsa.entity")
 public class DaoConfig {
 
 }
