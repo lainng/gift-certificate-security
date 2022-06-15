@@ -1,8 +1,8 @@
 package com.piatnitsa.service.impl;
 
-import com.piatnitsa.dao.GiftCertificateDao;
-import com.piatnitsa.dao.OrderDao;
-import com.piatnitsa.dao.UserDao;
+import com.piatnitsa.dao.GiftCertificateRepository;
+import com.piatnitsa.dao.OrderRepository;
+import com.piatnitsa.dao.UserRepository;
 import com.piatnitsa.entity.GiftCertificate;
 import com.piatnitsa.entity.Order;
 import com.piatnitsa.entity.User;
@@ -25,19 +25,19 @@ import java.util.Optional;
 
 @Component
 public class OrderServiceImpl extends AbstractService<Order> implements OrderService {
-    private final OrderDao orderDao;
-    private final UserDao userDao;
-    private final GiftCertificateDao giftCertificateDao;
+    private final OrderRepository orderRepository;
+    private final UserRepository userRepository;
+    private final GiftCertificateRepository giftCertificateRepository;
     private final TimestampHandler timestampHandler;
 
-    public OrderServiceImpl(OrderDao orderDao,
-                            UserDao userDao,
-                            GiftCertificateDao giftCertificateDao,
+    public OrderServiceImpl(OrderRepository orderRepository,
+                            UserRepository userRepository,
+                            GiftCertificateRepository giftCertificateRepository,
                             TimestampHandler timestampHandler) {
-        super(orderDao);
-        this.orderDao = orderDao;
-        this.userDao = userDao;
-        this.giftCertificateDao = giftCertificateDao;
+        super(orderRepository);
+        this.orderRepository = orderRepository;
+        this.userRepository = userRepository;
+        this.giftCertificateRepository = giftCertificateRepository;
         this.timestampHandler = timestampHandler;
     }
 
@@ -49,13 +49,13 @@ public class OrderServiceImpl extends AbstractService<Order> implements OrderSer
             throw new IncorrectParameterException(messageHolder);
         }
 
-        Optional<User> optionalUser = userDao.findById(userId);
+        Optional<User> optionalUser = userRepository.findById(userId);
         if (!optionalUser.isPresent()) {
             throw new NoSuchEntityException(ExceptionMessageKey.USER_NOT_FOUND);
         }
 
         PageRequest pageRequest = PageRequest.of(page, size);
-        return orderDao.findByUserId(userId, pageRequest);
+        return orderRepository.findByUserId(userId, pageRequest);
     }
 
     @Override
@@ -65,13 +65,13 @@ public class OrderServiceImpl extends AbstractService<Order> implements OrderSer
             throw new IncorrectParameterException(holder);
         }
 
-        Optional<GiftCertificate> optionalGiftCertificate = giftCertificateDao.findById(entity.getCertificate().getId());
+        Optional<GiftCertificate> optionalGiftCertificate = giftCertificateRepository.findById(entity.getCertificate().getId());
         if (!optionalGiftCertificate.isPresent()) {
             throw new NoSuchEntityException(ExceptionMessageKey.GIFT_CERTIFICATE_NOT_FOUND);
         }
         entity.setCertificate(optionalGiftCertificate.get());
 
-        Optional<User> optionalUser = userDao.findById(entity.getUser().getId());
+        Optional<User> optionalUser = userRepository.findById(entity.getUser().getId());
         if (!optionalUser.isPresent()) {
             throw new NoSuchEntityException(ExceptionMessageKey.USER_NOT_FOUND);
         }
@@ -79,7 +79,7 @@ public class OrderServiceImpl extends AbstractService<Order> implements OrderSer
 
         entity.setCost(optionalGiftCertificate.get().getPrice());
         entity.setPurchaseTime(timestampHandler.getCurrentTimestamp());
-        return orderDao.insert(entity);
+        return orderRepository.save(entity);
     }
 
     @Override
