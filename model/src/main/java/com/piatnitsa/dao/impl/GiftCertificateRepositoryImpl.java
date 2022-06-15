@@ -1,6 +1,6 @@
 package com.piatnitsa.dao.impl;
 
-import com.piatnitsa.dao.AbstractDao;
+import com.piatnitsa.dao.AbstractRepository;
 import com.piatnitsa.dao.FilteringRepository;
 import com.piatnitsa.dao.creator.QueryCreator;
 import com.piatnitsa.entity.GiftCertificate;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class GiftCertificateRepositoryImpl
-        extends AbstractDao<GiftCertificate>
+        extends AbstractRepository<GiftCertificate>
         implements FilteringRepository<GiftCertificate> {
 
     @Autowired

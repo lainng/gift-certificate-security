@@ -1,6 +1,6 @@
 package com.piatnitsa.dao.impl;
 
-import com.piatnitsa.dao.AbstractDao;
+import com.piatnitsa.dao.AbstractRepository;
 import com.piatnitsa.dao.CustomTagRepository;
 import com.piatnitsa.dao.creator.QueryCreator;
 import com.piatnitsa.entity.Tag;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public class TagRepositoryImpl extends AbstractDao<Tag> implements CustomTagRepository {
+public class TagRepositoryImpl extends AbstractRepository<Tag> implements CustomTagRepository {
     private static final String QUERY_SELECT_MOST_POPULAR_TAG = "select t from Order o " +
             "join o.certificate c " +
             "join c.tags t " +

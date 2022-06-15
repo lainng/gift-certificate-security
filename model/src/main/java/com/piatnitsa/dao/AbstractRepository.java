@@ -18,14 +18,14 @@ import java.util.stream.Collectors;
  * @author Vlad Piatnitsa
  * @version 1.0
  */
-public abstract class AbstractDao<T> implements FilteringRepository<T> {
+public abstract class AbstractRepository<T> implements FilteringRepository<T> {
 
     @PersistenceContext
     protected EntityManager entityManager;
     protected final QueryCreator<T> queryCreator;
     protected final Class<T> entityType;
 
-    public AbstractDao(QueryCreator<T> queryCreator, Class<T> entityType) {
+    public AbstractRepository(QueryCreator<T> queryCreator, Class<T> entityType) {
         this.queryCreator = queryCreator;
         this.entityType = entityType;
     }
