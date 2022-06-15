@@ -11,14 +11,7 @@ import java.util.Optional;
  * @author Vlad Piatnitsa
  * @version 1.0
  */
-public interface TagDao extends CRDDao<Tag>{
-
-    /**
-     * Retrieves an {@link Tag} entity by its name.
-     * @param name entity name.
-     * @return an {@link Tag} entity.
-     */
-    Optional<Tag> findByName(String name);
+public interface CustomTagRepository extends FilteringRepository<Tag> {
 
     /**
      * Retrieves the most popular {@link Tag} entity with the highest cost of all {@link Order} entities.
