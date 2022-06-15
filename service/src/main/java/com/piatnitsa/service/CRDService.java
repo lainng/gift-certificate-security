@@ -1,5 +1,7 @@
 package com.piatnitsa.service;
 
+import org.springframework.util.MultiValueMap;
+
 import java.util.List;
 
 /**
@@ -34,4 +36,6 @@ public interface CRDService<T> {
      * @param id an ID of {@link T} entity.
      */
     void removeById(long id);
+
+    List<T> doFilter(MultiValueMap<String, String> params, int page, int size);
 }
