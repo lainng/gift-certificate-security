@@ -1,6 +1,6 @@
 package com.piatnitsa.util.updater.impl;
 
-import com.piatnitsa.dao.impl.TagDaoImpl;
+import com.piatnitsa.dao.TagRepository;
 import com.piatnitsa.entity.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class TagDataUpdaterImplTest {
 
     @Mock
-    TagDaoImpl tagDao;
+    TagRepository tagRepository;
 
     @InjectMocks
     TagDataUpdaterImpl tagDataUpdater;
@@ -39,8 +39,8 @@ class TagDataUpdaterImplTest {
 
     @Test
     void updateDataList_thenOk() {
-        Mockito.when(tagDao.findByName(NEW_TAG.getName())).thenReturn(Optional.empty());
-        Mockito.when(tagDao.findByName(OLD_TAG.getName())).thenReturn(Optional.of(OLD_TAG_FROM_DB));
+        Mockito.when(tagRepository.findTagByName(NEW_TAG.getName())).thenReturn(Optional.empty());
+        Mockito.when(tagRepository.findTagByName(OLD_TAG.getName())).thenReturn(Optional.of(OLD_TAG_FROM_DB));
         List<Tag> actual = tagDataUpdater.updateDataList(NEW_TAG_LIST);
         assertEquals(UPDATED_TAG_LIST, actual);
     }
