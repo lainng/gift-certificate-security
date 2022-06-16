@@ -1,11 +1,8 @@
 package com.piatnitsa.dao.impl;
 
 import com.piatnitsa.config.DaoTestConfig;
-import com.piatnitsa.dao.OrderDao;
-import com.piatnitsa.entity.GiftCertificate;
-import com.piatnitsa.entity.Order;
-import com.piatnitsa.entity.Tag;
-import com.piatnitsa.entity.User;
+import com.piatnitsa.dao.OrderRepository;
+import com.piatnitsa.entity.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,11 +24,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @TestPropertySource("classpath:application-test.properties")
 @ActiveProfiles("test")
 @Transactional
-class OrderDaoImplTest {
+class OrderRepositoryImplTest {
     private static final long NOT_EXISTED_ID = 999L;
     private final Pageable pageRequest = PageRequest.of(0, 5);
 
-    private final User USER_1 = new User(1, "name1");
+    private final User USER_1 = new User(1, "name1", "email1@email.com",
+            "$2a$12$uZ8GTbHV019Cfq1QuSR0xeEpsp6cse3s41E0r6BnLgpEJdEUdB6y2", Role.USER);
 
     private final GiftCertificate GIFT_CERTIFICATE_2 = new GiftCertificate(2, "giftCertificate3",
             "description3", new BigDecimal("100.99"), 3,
@@ -49,18 +47,18 @@ class OrderDaoImplTest {
             LocalDateTime.parse("2019-10-20T07:20:15.156"), GIFT_CERTIFICATE_2, USER_1);
 
     @Autowired
-    OrderDao orderDao;
+    OrderRepository orderRepository;
 
     @Test
     void findByUserId_thenOk() {
         List<Order> expected = Arrays.asList(ORDER_1, ORDER_2);
-        List<Order> actual = orderDao.findByUserId(USER_1.getId(), pageRequest);
+        List<Order> actual = orderRepository.findByUserId(USER_1.getId(), pageRequest);
         assertEquals(expected, actual);
     }
 
     @Test
     void findNotExistedUserId_thenReturnNull() {
-        List<Order> actual = orderDao.findByUserId(NOT_EXISTED_ID, pageRequest);
+        List<Order> actual = orderRepository.findByUserId(NOT_EXISTED_ID, pageRequest);
         assertTrue(actual.isEmpty());
     }
 }
