@@ -16,22 +16,22 @@ import java.util.Arrays;
 public class LoggingAspect {
     private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
 
-    @Pointcut("within (com.piatnitsa..*) ")
-    public void anyClassMethods() {}
+    @Pointcut("within (com.piatnitsa.controller..*) ")
+    public void controllerMethods() {}
 
-    @Before("anyClassMethods()")
+    @Before("controllerMethods()")
     public void logBeforeExecutionTime(JoinPoint jp) {
         LOGGER.debug("Start executing method: " + jp.getSignature()
                 + " with arguments " + Arrays.asList(jp.getArgs()));
     }
 
-    @AfterReturning(value = "anyClassMethods()", returning = "object")
+    @AfterReturning(value = "controllerMethods()", returning = "object")
     public void logAfterReturningValue(JoinPoint jp, Object object) {
         LOGGER.debug("Method " + jp.getSignature()
                 + " successfully executed and returned the value [" + object + "]");
     }
 
-    @AfterThrowing(value = "anyClassMethods()", throwing = "ex")
+    @AfterThrowing(value = "controllerMethods()", throwing = "ex")
     public void logAfterThrowingException(JoinPoint jp, Exception ex) {
         LOGGER.error("Method " + jp.getSignature() + " throws " + ex);
     }
