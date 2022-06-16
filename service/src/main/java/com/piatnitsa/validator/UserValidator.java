@@ -44,7 +44,7 @@ public class UserValidator {
         if (name == null
                 || name.length() < MIN_NAME_LENGTH
                 || name.length() > MAX_NAME_LENGTH) {
-            holder.putException(ExceptionMessageKey.BAD_USER_NAME);
+            holder.putException(ExceptionMessageKey.BAD_USER_NAME, name);
         }
     }
 }
