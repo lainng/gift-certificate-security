@@ -1,7 +1,7 @@
 package com.piatnitsa.service.impl;
 
+import com.piatnitsa.dao.TagRepository;
 import com.piatnitsa.dao.creator.FilterParameter;
-import com.piatnitsa.dao.impl.TagDaoImpl;
 import com.piatnitsa.entity.Tag;
 import com.piatnitsa.exception.DuplicateEntityException;
 import com.piatnitsa.exception.NoSuchEntityException;
@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -25,11 +26,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(MockitoExtension.class)
 class TagServiceImplTest {
 
-    @Mock
-    TagDaoImpl tagDao;
-
-    @InjectMocks
-    TagServiceImpl tagService;
+    @Mock TagRepository tagRepository;
+    @InjectMocks TagServiceImpl tagService;
 
     private final Tag TAG_1 = new Tag(1, "tagName1");
     private final Tag TAG_2 = new Tag(2, "tagName3");
@@ -50,14 +48,14 @@ class TagServiceImplTest {
 
     @Test
     void getById_thenOk() {
-        Mockito.when(tagDao.findById(TAG_1.getId())).thenReturn(Optional.of(TAG_1));
+        Mockito.when(tagRepository.findById(TAG_1.getId())).thenReturn(Optional.of(TAG_1));
         Tag actual = tagService.getById(TAG_1.getId());
         assertEquals(TAG_1, actual);
     }
 
     @Test
     void getByNotExistedId_thenThrow() {
-        Mockito.when(tagDao.findById(NOT_EXISTED_ID)).thenReturn(Optional.empty());
+        Mockito.when(tagRepository.findById(NOT_EXISTED_ID)).thenReturn(Optional.empty());
         assertThrows(NoSuchEntityException.class, () -> tagService.getById(NOT_EXISTED_ID));
     }
 
@@ -65,7 +63,7 @@ class TagServiceImplTest {
     void getAll_thenOk() {
         PageRequest pageRequest = PageRequest.of(PAGE, SIZE);
         List<Tag> expected = Arrays.asList(TAG_1, TAG_2, TAG_5, TAG_4, TAG_5);
-        Mockito.when(tagDao.findAll(pageRequest)).thenReturn(expected);
+        Mockito.when(tagRepository.findAll(pageRequest)).thenReturn(new PageImpl<>(expected));
         List<Tag> actual = tagService.getAll(PAGE, SIZE);
         assertEquals(expected, actual);
     }
@@ -79,7 +77,7 @@ class TagServiceImplTest {
         filterParams.add(FilterParameter.SORT_BY_TAG_NAME, ASCENDING);
 
         List<Tag> expected = Arrays.asList(TAG_1, TAG_3, TAG_2, TAG_4);
-        Mockito.when(tagDao.findWithFilter(filterParams, pageRequest)).thenReturn(expected);
+        Mockito.when(tagRepository.findWithFilter(filterParams, pageRequest)).thenReturn(expected);
         List<Tag> actual = tagService.doFilter(filterParams, PAGE, SIZE);
         assertEquals(expected, actual);
     }
@@ -92,35 +90,35 @@ class TagServiceImplTest {
         filterParams.add(INCORRECT_FILTER_PARAM, INCORRECT_FILTER_PARAM_VALUE);
 
         List<Tag> expected = Arrays.asList(TAG_1, TAG_2, TAG_3, TAG_4);
-        Mockito.when(tagDao.findWithFilter(filterParams, pageRequest)).thenReturn(expected);
+        Mockito.when(tagRepository.findWithFilter(filterParams, pageRequest)).thenReturn(expected);
         List<Tag> actual = tagService.doFilter(filterParams, PAGE, SIZE);
         assertEquals(expected, actual);
     }
 
     @Test
     void insert_thenOk() {
-        Mockito.when(tagDao.findByName(NEW_INSERT_TAG.getName())).thenReturn(Optional.empty());
-        Mockito.when(tagDao.insert(BEFORE_INSERT_TAG)).thenReturn(TAG_5);
+        Mockito.when(tagRepository.findTagByName(NEW_INSERT_TAG.getName())).thenReturn(Optional.empty());
+        Mockito.when(tagRepository.save(BEFORE_INSERT_TAG)).thenReturn(TAG_5);
         Tag actual = tagService.insert(NEW_INSERT_TAG);
         assertEquals(TAG_5, actual);
     }
 
     @Test
     void insertAlreadyExistedTag_thenThrow() {
-        Mockito.when(tagDao.findByName(NEW_INSERT_TAG.getName())).thenReturn(Optional.of(TAG_5));
+        Mockito.when(tagRepository.findTagByName(NEW_INSERT_TAG.getName())).thenReturn(Optional.of(TAG_5));
         assertThrows(DuplicateEntityException.class, () -> tagService.insert(NEW_INSERT_TAG));
     }
 
     @Test
     void getMostPopularTagWithHighestCostOfAllOrders_tagExisted_thenOk() {
-        Mockito.when(tagDao.findMostPopularTagWithHighestCostOfAllOrders()).thenReturn(Optional.of(TAG_4));
+        Mockito.when(tagRepository.findMostPopularTagWithHighestCostOfAllOrders()).thenReturn(Optional.of(TAG_4));
         Tag actual = tagService.getMostPopularTagWithHighestCostOfAllOrders();
         assertEquals(TAG_4, actual);
     }
 
     @Test
     void getMostPopularTagWithHighestCostOfAllOrders_tagNotExisted_thenThrow() {
-        Mockito.when(tagDao.findMostPopularTagWithHighestCostOfAllOrders()).thenReturn(Optional.empty());
+        Mockito.when(tagRepository.findMostPopularTagWithHighestCostOfAllOrders()).thenReturn(Optional.empty());
         assertThrows(NoSuchEntityException.class, () -> tagService.getMostPopularTagWithHighestCostOfAllOrders());
     }
 }

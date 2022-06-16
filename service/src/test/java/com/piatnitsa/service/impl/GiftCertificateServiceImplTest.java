@@ -1,7 +1,7 @@
 package com.piatnitsa.service.impl;
 
+import com.piatnitsa.dao.GiftCertificateRepository;
 import com.piatnitsa.dao.creator.FilterParameter;
-import com.piatnitsa.dao.impl.GiftCertificateDaoImpl;
 import com.piatnitsa.entity.GiftCertificate;
 import com.piatnitsa.entity.Tag;
 import com.piatnitsa.exception.DuplicateEntityException;
@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.LinkedMultiValueMap;
@@ -32,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(MockitoExtension.class)
 class GiftCertificateServiceImplTest {
 
-    GiftCertificateDaoImpl certificateDao = Mockito.mock(GiftCertificateDaoImpl.class);
+    GiftCertificateRepository certificateRepository = Mockito.mock(GiftCertificateRepository.class);
     TimestampHandler timestampHandler = Mockito.mock(TimestampHandler.class);
     TagDataUpdaterImpl tagDataUpdater = Mockito.mock(TagDataUpdaterImpl.class);
     GiftCertificateDataUpdaterImpl certificateDataUpdater = Mockito.mock(GiftCertificateDataUpdaterImpl.class);
@@ -42,7 +43,7 @@ class GiftCertificateServiceImplTest {
     @BeforeEach
     void setUp() {
         certificateService = new GiftCertificateServiceImpl(
-                certificateDao,
+                certificateRepository,
                 certificateDataUpdater,
                 tagDataUpdater,
                 timestampHandler
@@ -95,14 +96,14 @@ class GiftCertificateServiceImplTest {
 
     @Test
     void getById_thenOk() {
-        Mockito.when(certificateDao.findById(GIFT_CERTIFICATE_1.getId())).thenReturn(Optional.of(GIFT_CERTIFICATE_1));
+        Mockito.when(certificateRepository.findById(GIFT_CERTIFICATE_1.getId())).thenReturn(Optional.of(GIFT_CERTIFICATE_1));
         GiftCertificate actual = certificateService.getById(GIFT_CERTIFICATE_1.getId());
         assertEquals(GIFT_CERTIFICATE_1, actual);
     }
 
     @Test
     void getByNotExistedId_thenThrowEx() {
-        Mockito.when(certificateDao.findById(NOT_EXISTED_ID)).thenReturn(Optional.empty());
+        Mockito.when(certificateRepository.findById(NOT_EXISTED_ID)).thenReturn(Optional.empty());
         assertThrows(NoSuchEntityException.class, () -> certificateService.getById(NOT_EXISTED_ID));
     }
 
@@ -110,7 +111,7 @@ class GiftCertificateServiceImplTest {
     void getAll_thenOk() {
         Pageable pageRequest = PageRequest.of(0, 5);
         List<GiftCertificate> expected = Arrays.asList(GIFT_CERTIFICATE_1, GIFT_CERTIFICATE_2, GIFT_CERTIFICATE_3);
-        Mockito.when(certificateDao.findAll(pageRequest)).thenReturn(expected);
+        Mockito.when(certificateRepository.findAll(pageRequest)).thenReturn(new PageImpl<>(expected));
         List<GiftCertificate> actual = certificateService.getAll(PAGE, SIZE);
         assertEquals(expected, actual);
     }
@@ -124,7 +125,7 @@ class GiftCertificateServiceImplTest {
         filterParams.add(FilterParameter.NAME_SORT, ASCENDING);
 
         List<GiftCertificate> expected = Collections.singletonList(GIFT_CERTIFICATE_1);
-        Mockito.when(certificateDao.findWithFilter(filterParams, pageRequest)).thenReturn(expected);
+        Mockito.when(certificateRepository.findWithFilter(filterParams, pageRequest)).thenReturn(expected);
         List<GiftCertificate> actual = certificateService.doFilter(filterParams, PAGE, SIZE);
         assertEquals(expected, actual);
     }
@@ -133,8 +134,8 @@ class GiftCertificateServiceImplTest {
     void insert_thenOk() {
         List<Tag> newTags = Arrays.asList(new Tag(2, TAG_3_NAME), new Tag(4, TAG_4_NAME));
         Mockito.when(tagDataUpdater.updateDataList(NEW_ADDED_CERTIFICATE.getTags())).thenReturn(newTags);
-        Mockito.when(certificateDao.findByName(GIFT_CERTIFICATE_2.getName())).thenReturn(Optional.empty());
-        Mockito.when(certificateDao.insert(BEFORE_INSERT_CERTIFICATE)).thenReturn(GIFT_CERTIFICATE_2);
+        Mockito.when(certificateRepository.findByName(GIFT_CERTIFICATE_2.getName())).thenReturn(Optional.empty());
+        Mockito.when(certificateRepository.save(BEFORE_INSERT_CERTIFICATE)).thenReturn(GIFT_CERTIFICATE_2);
         Mockito.when(timestampHandler.getCurrentTimestamp()).thenReturn(UPDATED_DATE);
         GiftCertificate actual = certificateService.insert(NEW_ADDED_CERTIFICATE);
         assertEquals(GIFT_CERTIFICATE_2, actual);
@@ -142,22 +143,22 @@ class GiftCertificateServiceImplTest {
 
     @Test
     void insertExistedCertificate_thenThrowEx() {
-        Mockito.when(certificateDao.findByName(GIFT_CERTIFICATE_2.getName())).thenReturn(Optional.of(GIFT_CERTIFICATE_2));
+        Mockito.when(certificateRepository.findByName(GIFT_CERTIFICATE_2.getName())).thenReturn(Optional.of(GIFT_CERTIFICATE_2));
         assertThrows(DuplicateEntityException.class, () -> certificateService.insert(NEW_ADDED_CERTIFICATE));
     }
 
     @Test
     void update_thenOk() {
-        Mockito.when(certificateDao.findById(GIFT_CERTIFICATE_3.getId())).thenReturn(Optional.of(GIFT_CERTIFICATE_3));
+        Mockito.when(certificateRepository.findById(GIFT_CERTIFICATE_3.getId())).thenReturn(Optional.of(GIFT_CERTIFICATE_3));
         Mockito.when(certificateDataUpdater.updateData(GIFT_CERTIFICATE_3, NEW_DATA_CERTIFICATE)).thenReturn(BEFORE_UPDATE_CERTIFICATE);
-        Mockito.when(certificateDao.update(BEFORE_UPDATE_CERTIFICATE)).thenReturn(BEFORE_UPDATE_CERTIFICATE);
+        Mockito.when(certificateRepository.save(BEFORE_UPDATE_CERTIFICATE)).thenReturn(BEFORE_UPDATE_CERTIFICATE);
         GiftCertificate actual = certificateService.update(GIFT_CERTIFICATE_3.getId(), NEW_DATA_CERTIFICATE);
         assertEquals(BEFORE_UPDATE_CERTIFICATE, actual);
     }
 
     @Test
     void updateNotExistedEntity_thenThrowEx() {
-        Mockito.when(certificateDao.findById(GIFT_CERTIFICATE_3.getId())).thenReturn(Optional.empty());
+        Mockito.when(certificateRepository.findById(GIFT_CERTIFICATE_3.getId())).thenReturn(Optional.empty());
         assertThrows(NoSuchEntityException.class, () -> certificateService.update(
                 GIFT_CERTIFICATE_3.getId(),
                 NEW_DATA_CERTIFICATE)
@@ -166,14 +167,14 @@ class GiftCertificateServiceImplTest {
 
     @Test
     void getByName_thenOk() {
-        Mockito.when(certificateDao.findByName(GIFT_CERTIFICATE_1.getName())).thenReturn(Optional.of(GIFT_CERTIFICATE_1));
+        Mockito.when(certificateRepository.findByName(GIFT_CERTIFICATE_1.getName())).thenReturn(Optional.of(GIFT_CERTIFICATE_1));
         GiftCertificate actual = certificateService.getByName(GIFT_CERTIFICATE_1.getName());
         assertEquals(GIFT_CERTIFICATE_1, actual);
     }
 
     @Test
     void getByNotExistedName_thenThrowEx() {
-        Mockito.when(certificateDao.findByName(NOT_EXISTED_NAME)).thenReturn(Optional.empty());
+        Mockito.when(certificateRepository.findByName(NOT_EXISTED_NAME)).thenReturn(Optional.empty());
         assertThrows(NoSuchEntityException.class, () -> certificateService.getByName(NOT_EXISTED_NAME));
     }
 }
