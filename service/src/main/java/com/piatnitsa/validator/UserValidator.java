@@ -27,7 +27,7 @@ public class UserValidator {
         if (email == null || email.isEmpty()
                 || email.length() > MAX_EMAIL_LENGTH
                 || !email.matches(EMAIL_REGEXP)) {
-            holder.putException(ExceptionMessageKey.BAD_EMAIL, email);
+            holder.putException(ExceptionMessageKey.BAD_USER_EMAIL, email);
         }
         return holder;
     }
