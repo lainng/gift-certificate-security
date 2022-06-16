@@ -18,19 +18,19 @@ class OrderValidatorTest {
 
     private final Order CORRECT_ORDER = new Order(0, null, null,
             new GiftCertificate(CORRECT_ID, null, null, null, 0, null, null, null),
-            new User(CORRECT_ID, null)
+            new User(CORRECT_ID, null, null, null, null)
     );
     private final Order INCORRECT_ORDER = new Order(0, null, null,
             new GiftCertificate(INCORRECT_ID, null, null, null, 0, null, null, null),
-            new User(INCORRECT_ID, null)
+            new User(INCORRECT_ID, null, null, null, null)
     );
     private final Order ORDER_INCORRECT_USER = new Order(0, null, null,
             new GiftCertificate(CORRECT_ID, null, null, null, 0, null, null, null),
-            new User(INCORRECT_ID, null)
+            new User(INCORRECT_ID, null, null, null, null)
     );
     private final Order ORDER_INCORRECT_CERTIFICATE = new Order(0, null, null,
             new GiftCertificate(INCORRECT_ID, null, null, null, 0, null, null, null),
-            new User(CORRECT_ID, null)
+            new User(CORRECT_ID, null, null, null, null)
     );
 
     @Test
