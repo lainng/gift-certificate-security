@@ -25,8 +25,11 @@ create table gift_certificate_with_tags
 );
 
 create table "user" (
-    id      identity          not null primary key,
-    name    varchar(50)     not null
+    id          identity        not null primary key,
+    name        varchar(50)     not null,
+    email       varchar(64)     not null,
+    password    varchar(64)     not null,
+    role        varchar(20)     not null
 );
 
 create table "order" (

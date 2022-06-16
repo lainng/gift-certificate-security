@@ -31,11 +31,11 @@ INSERT INTO gift_certificate_with_tags (gift_certificate_id, tag_id)
 VALUES (2, 4);
 
 
-INSERT INTO "user" (name)
-VALUES ('name1');
+INSERT INTO "user" (name, email, password, role)
+VALUES ('name1', 'email1@email.com', '$2a$12$uZ8GTbHV019Cfq1QuSR0xeEpsp6cse3s41E0r6BnLgpEJdEUdB6y2', 'USER');
 
-INSERT INTO "user" (name)
-VALUES ('name2');
+INSERT INTO "user" (name, email, password, role)
+VALUES ('name2', 'email2@email.com', '$2a$12$lwRYdasb8dKItMgwFPVd2u26C1s3kNySJSdT1abAPBhTKOLGdO1Gy', 'USER');
 
 
 INSERT INTO "order" (cost, purchase_time, user_id, gift_certificate_id)
