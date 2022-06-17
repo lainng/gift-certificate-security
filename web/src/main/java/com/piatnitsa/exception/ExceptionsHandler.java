@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.piatnitsa.config.language.ExceptionMessageTranslator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -77,6 +78,12 @@ public class ExceptionsHandler {
     @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
     public ErrorResponse handleUnsupportedOperationException() {
         return createResponse(HttpStatus.METHOD_NOT_ALLOWED, "exception.unsupportedOperation");
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponse handleBadCredentialsException() {
+        return createResponse(HttpStatus.UNAUTHORIZED, "exception.invalidAuthorization");
     }
 
     private ErrorResponse createResponse(HttpStatus status, String messageCode) {
