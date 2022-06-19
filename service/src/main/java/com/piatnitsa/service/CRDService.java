@@ -37,5 +37,11 @@ public interface CRDService<T> {
      */
     void removeById(long id);
 
+    /**
+     * Method for getting a list of {@link T} by specific parameters.
+     * @param page page index.
+     * @param size the size of the page to be returned.
+     * @return {@link List} of {@link T}.
+     */
     List<T> doFilter(MultiValueMap<String, String> params, int page, int size);
 }
