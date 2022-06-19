@@ -7,6 +7,12 @@ import org.springframework.stereotype.Repository;
 import javax.transaction.Transactional;
 import java.util.Optional;
 
+/**
+ * This interface describes abstract behavior for working with <code>tag</code> table in the database.
+ *
+ * @author Vlad Piatnitsa
+ * @version 1.0
+ */
 @Repository
 @Transactional
 public interface TagRepository extends JpaRepository<Tag, Long>, CustomTagRepository {

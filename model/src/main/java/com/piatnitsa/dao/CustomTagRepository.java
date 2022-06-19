@@ -6,9 +6,9 @@ import com.piatnitsa.entity.Tag;
 import java.util.Optional;
 
 /**
- * This interface describes abstract behavior for working with <code>tag</code> table in the database.
- *
- * @author Vlad Piatnitsa
+ * This interface describes abstract behavior for working with
+ *  <code>tag</code> table using custom methods.
+ * @author Vlad Piatnitda
  * @version 1.0
  */
 public interface CustomTagRepository extends FilteringRepository<Tag> {

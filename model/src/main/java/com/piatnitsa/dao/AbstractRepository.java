@@ -11,8 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * This class is implementation of {@link FilteringRepository} interface
- * and represents basic tools for work with database tables.
+ * This class represents basic tools for work with database tables.
  * @param <T> type of entity.
  *
  * @author Vlad Piatnitsa

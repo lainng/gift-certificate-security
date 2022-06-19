@@ -6,7 +6,7 @@ import org.springframework.util.MultiValueMap;
 import java.util.List;
 
 /**
- * This interface describes CRD operations for working with database tables.
+ * This interface describes filtering operations for working with database tables.
  * @param <T> type of entity.
  *
  * @author Vlad Piatnitsa

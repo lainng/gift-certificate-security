@@ -17,5 +17,10 @@ import java.util.Optional;
 @Transactional
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    /**
+     * Method for getting a user from the datasource with a specified email.
+     * @param email user email.
+     * @return user entity.
+     */
     Optional<User> findUserByEmail(String email);
 }
