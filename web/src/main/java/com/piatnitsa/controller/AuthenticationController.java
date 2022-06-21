@@ -16,6 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * This class is an endpoint of the API which allows to perform operations for authorization.
+ * Annotated by {@link RestController} with no parameters to provide an answer in application/json.
+ * @author Vlad Piatnitsa
+ * @version 1.0
+ */
 @RestController
 public class AuthenticationController {
     private final UserService userService;
@@ -35,6 +41,11 @@ public class AuthenticationController {
         this.linkBuilder = linkBuilder;
     }
 
+    /**
+     * Method for authorizing an existing user.
+     * @param userCredentialsDto user credentials.
+     * @return user credentials with unique token.
+     */
     @PostMapping("/auth")
     @ResponseStatus(HttpStatus.OK)
     public UserCredentialsDto authorizeUser(@RequestBody UserCredentialsDto userCredentialsDto) {
@@ -45,6 +56,11 @@ public class AuthenticationController {
         return userCredentialsDto;
     }
 
+    /**
+     * Method for registration new user.
+     * @param userDto user info for registration.
+     * @return registered user with HATEOAS.
+     */
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto registerUser(@RequestBody UserDto userDto) {

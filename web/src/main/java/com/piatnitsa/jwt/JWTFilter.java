@@ -16,6 +16,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * This class represents a web filter for token validation.
+ * @author Vlad Piatnitsa
+ * @version 1.0
+ */
 @Component
 public class JWTFilter extends OncePerRequestFilter {
     private static final String AUTHORIZATION = "Authorization";
