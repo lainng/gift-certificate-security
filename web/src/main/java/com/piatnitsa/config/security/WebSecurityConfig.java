@@ -58,6 +58,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(unauthenticatedEntryPoint)
                 .accessDeniedHandler(accessDeniedHandler)
                 .and()
+                .oauth2Login()
+                .and()
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
