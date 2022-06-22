@@ -1,4 +1,4 @@
-package com.piatnitsa.config.language;
+package com.piatnitsa.i18n;
 
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;

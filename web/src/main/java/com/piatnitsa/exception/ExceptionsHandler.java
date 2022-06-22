@@ -1,7 +1,7 @@
 package com.piatnitsa.exception;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.piatnitsa.config.language.ExceptionMessageTranslator;
+import com.piatnitsa.i18n.ExceptionMessageTranslator;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
