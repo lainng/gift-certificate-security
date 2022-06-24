@@ -1,6 +1,7 @@
-package com.piatnitsa.config.security;
+package com.piatnitsa.security.config;
 
 import com.piatnitsa.jwt.JWTFilter;
+import com.piatnitsa.security.OAuthLoginSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,14 +24,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String ADMIN_ROLE = "ADMIN";
     private final AuthenticationEntryPoint unauthenticatedEntryPoint;
     private final AccessDeniedHandler accessDeniedHandler;
+    private final OAuthLoginSuccessHandler oAuthLoginSuccessHandler;
 
     @Autowired
     public WebSecurityConfig(JWTFilter jwtFilter,
                              AuthenticationEntryPoint unauthenticatedEntryPoint,
-                             AccessDeniedHandler accessDeniedHandler) {
+                             AccessDeniedHandler accessDeniedHandler,
+                             OAuthLoginSuccessHandler oAuthLoginSuccessHandler) {
         this.jwtFilter = jwtFilter;
         this.unauthenticatedEntryPoint = unauthenticatedEntryPoint;
         this.accessDeniedHandler = accessDeniedHandler;
+        this.oAuthLoginSuccessHandler = oAuthLoginSuccessHandler;
     }
 
     @Bean
@@ -41,26 +45,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.httpBasic().disable()
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                    .csrf().disable()
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .authorizeRequests()
-                //All
-                .antMatchers(HttpMethod.GET, "/certificates/**").permitAll()
-                .antMatchers("/auth", "/register").permitAll()
-                //User
-                .antMatchers(HttpMethod.POST, "/orders/**").fullyAuthenticated()
-                .antMatchers(HttpMethod.GET, "/tags/**", "/users/**").fullyAuthenticated()
-                //Admin
-                .anyRequest().hasRole(ADMIN_ROLE)
+                    .authorizeRequests()
+                        //All
+                        .antMatchers(HttpMethod.GET, "/certificates/**").permitAll()
+                        .antMatchers("/auth", "/register").permitAll()
+                        //User
+                        .antMatchers(HttpMethod.POST, "/orders/**").authenticated()
+                        .antMatchers(HttpMethod.GET, "/tags/**", "/users/**").authenticated()
+                        //Admin
+                        .anyRequest().hasRole(ADMIN_ROLE)
                 .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(unauthenticatedEntryPoint)
-                .accessDeniedHandler(accessDeniedHandler)
+                    .exceptionHandling()
+                        .authenticationEntryPoint(unauthenticatedEntryPoint)
+                        .accessDeniedHandler(accessDeniedHandler)
                 .and()
-                .oauth2Login()
+                    .oauth2Client()
                 .and()
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                    .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
