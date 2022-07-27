@@ -15,7 +15,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import java.util.Map;
 
 /**
- * This class presents entity which will be returned from controller in case generating exceptions.
+ * This class represents a set of exception handlers.
  * @author Vlad Piatnitsa
  * @version 1.0
  */
